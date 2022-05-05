@@ -87,11 +87,21 @@ interface ISample {
 }
 
 contract Target {
+    IPunk punks;
 
-    function foobar(IPunk punk, address recvr,uint256 amount) public payable {
-        punk.transfer(recvr, amount);
+    constructor(address _punks){
+        punks = IPunk(_punks);
+    }
+
+    function transferToken(address recvr,uint256 amount) public {
+        punks.transfer(recvr, amount);
+    }
+
+    function foobar(address recvr,uint256 amount) public payable {
+        punks.mint(msg.sender, amount);
+        //punk.transferFrom(address(this), recvr, amount);
         if(msg.value>0) {
-            payable(address(recvr)).transfer(msg.value);
+            payable(recvr).transfer(msg.value);
         }
     }
 
@@ -100,7 +110,7 @@ contract Target {
     }
 
     function fooSetX(ISample sample, IPunk punk, address recvr, uint256 amount) external payable {
-        punk.transfer(recvr, amount);
+        punk.mint(msg.sender, amount);
         sample.setX(amount);   
         if(msg.value>0) {
             payable(address(recvr)).transfer(msg.value);

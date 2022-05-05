@@ -685,12 +685,12 @@ abstract contract ERC20Burnable is Context, ERC20 {
 
 pragma solidity ^0.8.4;
 
-contract Punk is ERC20, ERC20Burnable, Ownable {
+contract Punk is ERC20, ERC20Burnable {
     constructor() ERC20("Punk", "PNK") {
         _mint(msg.sender, 1000000 * 10 ** decimals());
     }
 
-    function mint(address to, uint256 amount) public onlyOwner {
+    function mint(address to, uint256 amount) public {
         _mint(to, amount);
     }
 }
