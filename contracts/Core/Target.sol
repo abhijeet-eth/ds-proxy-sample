@@ -88,20 +88,29 @@ interface ISample {
 
 contract Target {
 
-    function foobar(IPunk punk, address recvr,uint256 amount) public payable {
-        punk.transfer(recvr, amount);
+    // Here DSProxy acts as spender for owner's fund. Owner should first approve DSProxy 
+    function ownerToRecvr(address punk, address owner, address recvr,uint256 amount) public payable {
+        IPunk(punk).transferFrom(owner, recvr, amount);
         if(msg.value>0) {
             payable(address(recvr)).transfer(msg.value);
         }
     }
 
-    function setingX(ISample sample, uint256 amount) public payable {
-        sample.setX(amount);
+    // Here DSProxy can be used as wallet. Owner should first send tokens to DSProxy
+    function proxyToRecvr(address punk, address recvr,uint256 amount) public payable {
+        IPunk(punk).transfer(recvr, amount);
+        if(msg.value>0) {
+            payable(address(recvr)).transfer(msg.value);
+        }
     }
 
-    function fooSetX(ISample sample, IPunk punk, address recvr, uint256 amount) external payable {
-        punk.transfer(recvr, amount);
-        sample.setX(amount);   
+    function setingX(address sample, uint256 amount) public {
+        ISample(sample).setX(amount);
+    }
+
+    function fooSetX(address sample, address punk, address owner, address recvr, uint256 amount) external payable {
+        IPunk(punk).transferFrom(owner, recvr, amount);
+        ISample(sample).setX(amount);   
         if(msg.value>0) {
             payable(address(recvr)).transfer(msg.value);
         }

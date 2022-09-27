@@ -95,12 +95,14 @@ const ActionAbi = require('./abi.js');
     return AbiCoder.encodeFunctionCall(funcAbi, _encodeForCall(args, types)[0]);
   }
 
+  module.exports = {encodeForDsProxyCall, getFuncAbi};
+
   //////////////// MAIN /////////////////////
 
   (async()=>{
-    const abi = await getFuncAbi('transfer');
+    const abi = await getFuncAbi('setingX');
 
-    const args = ["0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266", String(ethers.utils.parseEther("1.0"))];
+    const args = ["0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9", String(ethers.utils.parseEther("1.0"))];
     const args_types = ["address","uint256"];
 
     console.log(encodeForDsProxyCall(abi, args, args_types));
